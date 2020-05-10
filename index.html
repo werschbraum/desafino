@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>Desafino</title>
+        <script src="js/jquery-3.5.1.min.js"></script>
+        <script>
+            var url = "https://spreadsheets.google.com/feeds/list/1mj4ldqVUHbJB3L3J-1fQGk3m2KBgeX-anst1rRrRgOA/od6/public/values?alt=json";
+            $.getJSON(url, function(json){
+                var objectData = [];
+
+                $.each(json.feed.entry, function(key,val){
+                    var song = val.gsx$song.$t;
+                    var singer = val.gsx$singer.$t;
+                    var hint = val.gsx$hint.$t;
+                    var lyrics = val.gsx$lyrics.$t;
+
+                    objectData.push(
+                        {
+                            "singer":singer,
+                            "song":song,
+                            "hint":hint,
+                            "lyrics":lyrics
+                        }
+                    )
+                });
+
+                var r1 = getRand(0,objectData.length);
+                var r2 = 0;
+
+                if(r1<1){
+                    r2 = getRand(r1+1,objectData.length);
+                }else{
+                    r2 = getRand(0,r1-1);
+                }
+                
+                $("<li>").text(objectData[r1].singer + " - " + objectData[r1].song).appendTo("#body");
+                $("<li>").text(objectData[r2].singer + " - " + objectData[r2].song).appendTo("#body");
+                
+                console.log(objectData[getRand(0,objectData.length)]);
+ 
+            });
+
+            function getRand(min, max) {
+                return Math.floor(Math.random() * (max - min)) + min;
+            }
+        </script>
+    </head>
+    <body>
+        <ul id="body"></ul>
+    </body>
+</html>
